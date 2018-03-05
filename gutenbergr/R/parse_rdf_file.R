@@ -1,5 +1,5 @@
 parse_rdf_file <- function(path) {
-  file_xml <- xml2::read_xml(path)
-  file_list <- xml2::as_list(file_xml)
-  unlist(file_li)
+    file_xml <- xml2::read_xml(path)
+    root_nodes <- xml2::xml_find_all(file_xml, "pgterms:ebook")
+    lapply(root_nodes, parse_rdf_ebook)
 }

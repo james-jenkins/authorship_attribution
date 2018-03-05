@@ -4,8 +4,14 @@
 \alias{acquire_metadata}
 \title{Download and extract metadata}
 \usage{
-acquire_metadata()
+acquire_metadata(method = "curl")
+}
+\arguments{
+\item{method}{method passed to /code{download.file}}
 }
 \description{
-Download and extract metadata
+/code{acquire_metadata} downloads (using curl as a default)
+to download the metadata from Project Gutenberg. The compressed
+file is stored in /code{tempdir()} and extracted there using
+/code{untar}.
 }

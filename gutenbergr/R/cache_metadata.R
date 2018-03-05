@@ -17,9 +17,5 @@ cache_metadata <- function(lib = "~/gutenbergr") {
         lib <- tempdir()
     }
     acquire_metadata()
-    path <- paste(
-      # tempdir(),
-      "cache", "epub", sep = "/")
-    file_list <- list.files(path, recursive = TRUE, full.names = TRUE)
-
+    parse_metadata(paste(tempdir(), "cache", "epub", sep = "/"))
 }
