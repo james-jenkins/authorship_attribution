@@ -10,8 +10,7 @@ metadata_url <- "http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2"
 #' @param method method passed to /code{download.file}
 acquire_metadata <- function(method = "curl") {
     f_zip <- metadata_url
-    dest <- normalizePath(paste(tempdir(), "tmp.tar.bz2", 
-        sep = "/"), mustWork = FALSE)
+    dest <- normalizePath(paste(tempdir(), "tmp.tar.bz2", sep = "/"), mustWork = FALSE)
     download.file(f_zip, destfile = dest, method = method)
     untar(dest, tempdir())
     invisible()
