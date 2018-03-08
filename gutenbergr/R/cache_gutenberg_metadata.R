@@ -1,6 +1,6 @@
 #' Acquire and cache metadata
 #'
-#' /code{cache_metadata} calls /code{acquire_metadata}
+#' /code{cache_gutenberg_metadata} calls /code{acquire_metadata}
 #' to download and temporarily store the Project Gutenberg
 #' metadata. It then formats and caches the metadata so
 #' that it can be used again. Downloading and extracting
@@ -12,10 +12,10 @@
 #' @export
 #'
 #' @examples
-cache_metadata <- function(lib = "~/gutenbergr") {
+cache_gutenberg_metadata <- function(lib = "~/gutenbergr") {
     if (is.null(lib)) {
         lib <- tempdir()
     }
-    acquire_metadata()
+    acquire_gutenberg_metadata()
     parse_metadata(paste(tempdir(), "cache", "epub", sep = "/"))
 }
