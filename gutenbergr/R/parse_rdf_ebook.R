@@ -15,21 +15,19 @@ parse_rdf_ebook <- function(node,
         ns = ns)
     node_text <- setNames(xml2::xml_text(other_nodes), print_names)
     node_text <- sapply(attrs, function(x) paste(node_text[print_names == x], collapse = "/"))
-    df <- data.frame(t(node_text))
+    df <- data.frame(t(as.character(node_text)), jn = 1)
 
     author_id <- xml2::xml_find_first(author_node, "pgterms:agent")
     author_id <- xml2::xml_attr(author_id, "about")
     author_id <- as.numeric(gsub(".*/.*/", "", author_id))
-    if(is.null(author_id))
-      author_id <- NA
     author_name   <- xml2::xml_find_first(author_node, "pgterms:agent/pgterms:name")
     author_name   <- xml2::xml_text(author_name)
-    if(is.null(author_name))
-      author_name <- NA
-    author_df <- data.frame(author_id, author_name)
+    author_df <- data.frame(author_id, author_name, jn = 1)
 
+    if (!nrow(author_df))
+      author <- FALSE
 
     if (author)
-      df <- dplyr::bind_cols(df, author_df)
-    df
+      df <- dplyr::full_join(df, author_df, by = "jn")
+    dplyr::select(df, -jn)
 }
