@@ -4,10 +4,13 @@
 \alias{acquire_gutenberg_metadata}
 \title{Download and extract metadata}
 \usage{
-acquire_gutenberg_metadata(method = "curl")
+acquire_gutenberg_metadata(method = "curl",
+  path = getOption("gutenbergr_download_loc"))
 }
 \arguments{
 \item{method}{method passed to /code{download.file}}
+
+\item{path}{location to store downloaded files}
 }
 \description{
 /code{acquire_gutenberg_metadata} downloads (using curl as a default)

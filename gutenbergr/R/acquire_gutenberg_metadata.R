@@ -8,7 +8,9 @@ metadata_url <- "http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2"
 #' /code{untar}.
 #'
 #' @param method method passed to /code{download.file}
-acquire_gutenberg_metadata <- function(method = "curl", path = tempdir()) {
+#' @param path location to store downloaded files
+acquire_gutenberg_metadata <- function(method = "curl",
+                                       path = getOption("gutenbergr_download_loc")) {
     f_zip <- metadata_url
     dest <- normalizePath(file.path(path, "tmp.tar.bz2"), mustWork = FALSE)
     fl <- download.file(f_zip, destfile = dest, method = method)
@@ -25,12 +27,11 @@ acquire_gutenberg_metadata <- function(method = "curl", path = tempdir()) {
 #' takes a long time, so it is useful to cache the data
 #'
 #' @param lib The location to store the cached metadata
-#'
-#' @return
+#' 
 #' @export
 #'
 #' @examples
-cache_gutenberg_metadata <- function(lib = "~/gutenbergr") {
+cache_gutenberg_metadata <- function(lib = getOption("gutenbergr_cache")) {
   if (is.null(lib)) {
     lib <- tempdir()
   }
@@ -42,10 +43,44 @@ cache_gutenberg_metadata <- function(lib = "~/gutenbergr") {
   invisible()
 }
 
-load_cached_authors <- function(lib = "~/gutenbergr") {
-  readRDS(file.path(lib, "author.rds"))
+
+#' Load cached author metadata into memory
+#'
+#' @param lib the directory containing cached metadata. Generated with \code{cache_gutenberg_metadata}
+#'
+#' @export
+#'
+#' @examples
+load_cached_authors <- function(lib = getOption("gutenbergr_cache")) {
+    fp <- file.path(lib, "author.rds")
+
+    if (! file.exists(fp))
+        stop("Cannot find 'author.rds'. Was the directory created with cache_gutneberg_metadata?")
+    authors <- readRDS(fp)
+    assign(
+        "gutenberg_authors",
+        authors,
+        envir = as.environment("package:gutenbergr")
+    )
+    authors
 }
 
-load_cached_works <- function(lib = "~/gutenbergr") {
-  readRDS(file.path(lib, "work.rds"))
+#' Load cached work metadata into memory
+#'
+#' @param lib the directory containing cached metadata. Generated with \code{cache_gutenberg_metadata}
+#'
+#' @export
+#'
+#' @examples 
+load_ed_works <- function(lib = getOption("gutenbergr_cache")) {
+    fp <- file.path(lib, "work.rds")
+
+    if (! file.exists(fp))
+        stop("Cannot find 'work.rds'. Was the directory created with cache_gutneberg_metadata?")
+    works <- readRDS(fp)
+  assign(
+      "gutenberg_works",
+      works,
+      envir = as.environment("package:gutenbergr")
+  )
 }

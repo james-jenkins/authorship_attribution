@@ -10,8 +10,8 @@ parse_rdf_metadata <- function(filepath) {
   author <- parse_rdf_author(file_xml)
   id <- get_rdf_id(file_xml)
 
-  list(work = data.frame(id, work, stringsAsFactors = FALSE),
-       author = data.frame(author, stringsAsFactors = FALSE))
+  list(work = data.frame(id, work, stringsAsFactors = FALSE), author = data.frame(author,
+                                                                                  stringsAsFactors = FALSE))
 }
 
 check_metadata_file <- function(xml_file, root_ref = "pgterms:ebook") {
@@ -53,12 +53,10 @@ parse_rdf_author <- function(xml_file, root_ref = "pgterms:ebook") {
 
   author_id <- get_author_id(author_node)
 
-  author <- list(
-    author_name = xml2::xml_find_first(author_node, "pgterms:agent/pgterms:name"),
-    author_alias = xml2::xml_find_all(author_node, "pgterms:agent/pgterms:alias"),
-    author_birthdate = xml2::xml_find_first(author_node, "pgterms:agent/pgterms:birthdate"),
-    author_deathdate = xml2::xml_find_first(author_node, "pgterms:agent/pgterms:deathdate")
-  )
+  author <- list(author_name = xml2::xml_find_first(author_node, "pgterms:agent/pgterms:name"),
+                 author_alias = xml2::xml_find_all(author_node, "pgterms:agent/pgterms:alias"),
+                 author_birthdate = xml2::xml_find_first(author_node, "pgterms:agent/pgterms:birthdate"),
+                 author_deathdate = xml2::xml_find_first(author_node, "pgterms:agent/pgterms:deathdate"))
   author <- lapply(author, xml2::xml_text)
   author <- lapply(author, paste, collapse = " | ")
 
@@ -73,12 +71,10 @@ parse_rdf_work <- function(xml_file, root_ref = "pgterms:ebook") {
 
   author_id <- get_author_id(author_node)
 
-  work <- list(
-    title = xml2::xml_find_all(node, "dcterms:title"),
-    language = xml2::xml_find_all(node,"dcterms:language"),
-    bookshelf = xml2::xml_find_all(node, "pgterms:bookshelf"),
-    rights = xml2::xml_find_all(node, "dcterms:rights")
-  )
+  work <- list(title = xml2::xml_find_all(node, "dcterms:title"),
+               language = xml2::xml_find_all(node, "dcterms:language"),
+               bookshelf = xml2::xml_find_all(node, "pgterms:bookshelf"),
+               rights = xml2::xml_find_all(node, "dcterms:rights"))
 
   work <- lapply(work, xml2::xml_text)
   work <- lapply(work, paste, collapse = " | ")
@@ -90,11 +86,22 @@ parse_rdf_formats <- function(xml_file) {
 }
 
 parse_metadata_path <- function(path, pattern = "*.rdf", parser = parse_rdf_metadata) {
+  # Get the list of files matching the pattern in the path Expect an
+  # extracted metadata directory so recursive is TRUE due to the file
+  # structure of the archive.
   file_list <- list.files(path, pattern = pattern, recursive = TRUE,
                           full.names = TRUE)
   file_list <- file_list[basename(file_list) != "pg0.rdf"]
   file_list <- file_list
+
+  # Iterate over all files and parse them to return a list of work and
+  # author dataframes
   metadata <- lapply(file_list, parser)
-  lapply(purrr::transpose(metadata), dplyr::bind_rows, .id = NULL)
+
+  # Because the parser returns a list of dataframes and we have a list of
+  # parsed files, we must turn the list inside out so that we have a list
+  # of work dataframes and a list of author dataframes.
+  metadata <- lapply(purrr::transpose(metadata), dplyr::bind_rows, .id = NULL)
+  lapply(metadata, dplyr::distinct)
 }
 
