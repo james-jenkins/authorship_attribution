@@ -27,17 +27,26 @@ acquire_gutenberg_metadata <- function(method = "curl",
 #' takes a long time, so it is useful to cache the data
 #'
 #' @param lib The location to store the cached metadata
+#' @param create_dir Should the directory be created if it doesn't exist?
 #' 
 #' @export
 #'
 #' @examples
-cache_gutenberg_metadata <- function(lib = getOption("gutenbergr_cache")) {
+#' cache_gutenberg_metadata()
+#' 
+#' cache_gutenberg_metadata("~/gutenbergr")
+#'
+#' options(gutenbergr_cache = "~/gutenbergr")
+#' cache_gutenberg_metadata()
+cache_gutenberg_metadata <- function(lib = getOption("gutenbergr_cache"),
+                                     create_dir = TRUE) {
   if (is.null(lib)) {
     lib <- tempdir()
   }
   acquire_gutenberg_metadata()
   metadata <- parse_metadata_path(normalizePath(paste(tempdir(), "cache", "epub", sep = "/")))
-  dir.create(lib, showWarnings = FALSE)
+  if (create_dir)
+      dir.create(lib, showWarnings = FALSE)
   saveRDS(metadata$work, file = file.path(lib, "work.rds"))
   saveRDS(metadata$author, file = file.path(lib, "author.rds"))
   invisible()
@@ -51,6 +60,12 @@ cache_gutenberg_metadata <- function(lib = getOption("gutenbergr_cache")) {
 #' @export
 #'
 #' @examples
+#' load_cached_authors()
+#'
+#' load_cached_authors("~/gutenbergr")
+#'
+#' options(gutenbergr_cache = "~/gutenbergr")
+#' load_cached_authors()
 load_cached_authors <- function(lib = getOption("gutenbergr_cache")) {
     fp <- file.path(lib, "author.rds")
 
@@ -72,6 +87,12 @@ load_cached_authors <- function(lib = getOption("gutenbergr_cache")) {
 #' @export
 #'
 #' @examples 
+#' load_cached_works()
+#'
+#' load_cached_works("~/gutenbergr")
+#'
+#' options(gutenbergr_cache = "~/gutenbergr")
+#' load_cached_works()
 load_ed_works <- function(lib = getOption("gutenbergr_cache")) {
     fp <- file.path(lib, "work.rds")
 

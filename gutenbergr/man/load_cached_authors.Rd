@@ -12,3 +12,11 @@ load_cached_authors(lib = getOption("gutenbergr_cache"))
 \description{
 Load cached author metadata into memory
 }
+\examples{
+load_cached_authors()
+
+load_cached_authors("~/gutenbergr")
+
+options(gutenbergr_cache = "~/gutenbergr")
+load_cached_authors()
+}

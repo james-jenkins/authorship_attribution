@@ -12,3 +12,11 @@ load_ed_works(lib = getOption("gutenbergr_cache"))
 \description{
 Load cached work metadata into memory
 }
+\examples{
+load_cached_works()
+
+load_cached_works("~/gutenbergr")
+
+options(gutenbergr_cache = "~/gutenbergr")
+load_cached_works()
+}
