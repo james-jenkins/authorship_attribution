@@ -56,6 +56,7 @@ cache_gutenberg_metadata <- function(lib = getOption("gutenbergr_cache"),
 #' Load cached author metadata into memory
 #'
 #' @param lib the directory containing cached metadata. Generated with \code{cache_gutenberg_metadata}
+#' @param ret should the metadata data.frame be returned
 #'
 #' @export
 #'
@@ -66,7 +67,10 @@ cache_gutenberg_metadata <- function(lib = getOption("gutenbergr_cache"),
 #'
 #' options(gutenbergr_cache = "~/gutenbergr")
 #' load_cached_authors()
-load_cached_authors <- function(lib = getOption("gutenbergr_cache")) {
+#'
+#' gutenberg_authors <- load_cached_authors(ret = TRUE)
+load_cached_authors <- function(lib = getOption("gutenbergr_cache"),
+                                ret = FALSE) {
     fp <- file.path(lib, "author.rds")
 
     if (! file.exists(fp))
@@ -77,12 +81,15 @@ load_cached_authors <- function(lib = getOption("gutenbergr_cache")) {
         authors,
         envir = as.environment("package:gutenbergr")
     )
+    if (! ret)
+        return(invisible())
     authors
 }
 
 #' Load cached work metadata into memory
 #'
 #' @param lib the directory containing cached metadata. Generated with \code{cache_gutenberg_metadata}
+#' @param ret should the metadata data.frame be returned
 #'
 #' @export
 #'
@@ -93,7 +100,10 @@ load_cached_authors <- function(lib = getOption("gutenbergr_cache")) {
 #'
 #' options(gutenbergr_cache = "~/gutenbergr")
 #' load_cached_works()
-load_ed_works <- function(lib = getOption("gutenbergr_cache")) {
+#'
+#' gutenberg_works <- load_cached_works(ret = TRUE)
+load_cached_works <- function(lib = getOption("gutenbergr_cache"),
+                              ret = FALSE) {
     fp <- file.path(lib, "work.rds")
 
     if (! file.exists(fp))
@@ -104,4 +114,7 @@ load_ed_works <- function(lib = getOption("gutenbergr_cache")) {
       works,
       envir = as.environment("package:gutenbergr")
   )
+    if (! ret)
+        return(invisible())
+  works
 }

@@ -12,4 +12,5 @@ LazyData: true
 RoxygenNote: 6.0.1
 Imports: xml2,
     dplyr,
-    rlang
+    rlang,
+    lazyeval

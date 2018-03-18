@@ -4,10 +4,12 @@
 \alias{load_cached_authors}
 \title{Load cached author metadata into memory}
 \usage{
-load_cached_authors(lib = getOption("gutenbergr_cache"))
+load_cached_authors(lib = getOption("gutenbergr_cache"), ret = FALSE)
 }
 \arguments{
 \item{lib}{the directory containing cached metadata. Generated with \code{cache_gutenberg_metadata}}
+
+\item{ret}{should the metadata data.frame be returned}
 }
 \description{
 Load cached author metadata into memory
@@ -19,4 +21,6 @@ load_cached_authors("~/gutenbergr")
 
 options(gutenbergr_cache = "~/gutenbergr")
 load_cached_authors()
+
+gutenberg_authors <- load_cached_authors(ret = TRUE)
 }

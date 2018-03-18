@@ -13,9 +13,9 @@ parse_rdf_metadata <- function(filepath) {
   work <- parse_rdf_work(file_xml)
   formats <- parse_rdf_formats(file_xml)
   author <- parse_rdf_author(file_xml)
-  id <- get_rdf_id(file_xml)
+  gutenberg_id <- get_rdf_id(file_xml)
 
-  list(work = data.frame(id, work, stringsAsFactors = FALSE),
+  list(work = data.frame(gutenberg_id, work, stringsAsFactors = FALSE),
        author = data.frame(author, stringsAsFactors = FALSE))
 }
 

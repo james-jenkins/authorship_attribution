@@ -2,4 +2,4 @@
 
 export(cache_gutenberg_metadata)
 export(load_cached_authors)
-export(load_ed_works)
+export(load_cached_works)
