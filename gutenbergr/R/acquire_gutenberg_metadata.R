@@ -49,6 +49,7 @@ cache_gutenberg_metadata <- function(lib = getOption("gutenbergr_cache"),
       dir.create(lib, showWarnings = FALSE)
   saveRDS(metadata$work, file = file.path(lib, "work.rds"))
   saveRDS(metadata$author, file = file.path(lib, "author.rds"))
+  saveRDS(metadata$format, file = file.path(lib, "format.rds"))
   invisible()
 }
 
@@ -117,4 +118,38 @@ load_cached_works <- function(lib = getOption("gutenbergr_cache"),
     if (! ret)
         return(invisible())
   works
+}
+
+
+#' Load cached available format metadata into memory
+#'
+#' @param lib the directory containing cached metadata. Generated with \code{cache_gutenberg_metadata}
+#' @param ret should the metadata data.frame be returned
+#'
+#' @export
+#'
+#' @examples
+#' load_cached_formats()
+#'
+#' load_cached_formats("~/gutenbergr")
+#'
+#' options(gutenbergr_cache = "~/gutenbergr")
+#' load_cached_formats()
+#'
+#' gutenberg_formats <- load_cached_formats(ret = TRUE)
+load_cached_formats <- function(lib = getOption("gutenbergr_cache"),
+                                ret = FALSE) {
+    fp <- file.path(lib, "format.rds")
+
+    if (! file.exists(fp))
+        stop("Cannot find 'format.rds'. Was the directory created with cache_gutneberg_metadata?")
+    formats <- readRDS(fp)
+    assign(
+        "gutenberg_formats",
+        formats,
+        envir = as.environment("package:gutenbergr")
+    )
+    if (! ret)
+        return(invisible())
+    authors
 }

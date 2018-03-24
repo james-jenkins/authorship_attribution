@@ -10,13 +10,14 @@ parse_rdf_metadata <- function(filepath) {
   # Make sure that the xml file provided contains exactly one ebook node
   check_metadata_file(file_xml)
 
+  gutenberg_id <- get_rdf_id(file_xml)
   work <- parse_rdf_work(file_xml)
   formats <- parse_rdf_formats(file_xml)
   author <- parse_rdf_author(file_xml)
-  gutenberg_id <- get_rdf_id(file_xml)
 
   list(work = data.frame(gutenberg_id, work, stringsAsFactors = FALSE),
-       author = data.frame(author, stringsAsFactors = FALSE))
+       author = data.frame(author, stringsAsFactors = FALSE),
+       format = data.frame(gutenberg_id, formats, stringsAsFactors = FALSE))
 }
 
 #' Check if file is in the expected metadata format
@@ -99,8 +100,26 @@ parse_rdf_work <- function(xml_file, root_ref = "pgterms:ebook") {
   data.frame(work, author_id, stringsAsFactors = FALSE)
 }
 
-parse_rdf_formats <- function(xml_file) {
+parse_rdf_formats <- function(xml_file, root_ref = "pgterms:ebook") {
+    node <- xml2::xml_find_first(xml_file, root_ref)
 
+    format_nodes <- xml2::xml_find_all(xml_file, paste(root_ref,
+                                                       "dcterms:hasFormat",
+                                                       "pgterms:file",
+                                                        sep = "/"))
+    formats <- list(file = xml2::xml_attr(format_nodes, "about"),
+                   format = format_nodes)
+                       
+    formats$format <- lapply(formats$format, xml2::xml_find_all,"dcterms:format")
+    formats$format <- sapply(formats$format, function(x) {
+        paste(xml2::xml_text(x), collapse = " ; ")
+    })
+
+    if(!length(formats$format))
+        formats <- list(file = NA, format = NA)
+    
+    
+    data.frame(formats, stringsAsFactors = FALSE)
 }
 
 convert_lists_author_work_to_df <- function(metadata_list) {
@@ -110,7 +129,8 @@ convert_lists_author_work_to_df <- function(metadata_list) {
 
 #' Parse and combine all metadata files in path
 #' 
-parse_metadata_path <- function(path, pattern = "*.rdf", parser = parse_rdf_metadata) {
+parse_metadata_path <- function(path, pattern = "*.rdf",
+                                parser = parse_rdf_metadata) {
   # Get the list of files matching the pattern in the path Expect an
   # extracted metadata directory so recursive is TRUE due to the file
   # structure of the archive.
