@@ -13,7 +13,7 @@ cache_gutenberg_metadata(lib = getOption("gutenbergr_cache"),
 \item{create_dir}{Should the directory be created if it doesn't exist?}
 }
 \description{
-/code{cache_gutenberg_metadata} calls /code{acquire_metadata}
+\code{cache_gutenberg_metadata} calls \code{acquire_metadata}
 to download and temporarily store the Project Gutenberg
 metadata. It then formats and caches the metadata so
 that it can be used again. Downloading and extracting

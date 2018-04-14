@@ -8,13 +8,12 @@ acquire_gutenberg_metadata(method = "curl",
   path = getOption("gutenbergr_download_loc"))
 }
 \arguments{
-\item{method}{method passed to /code{download.file}}
+\item{method}{method passed to \code{download.file}}
 
 \item{path}{location to store downloaded files}
 }
 \description{
-/code{acquire_gutenberg_metadata} downloads (using curl as a default)
-to download the metadata from Project Gutenberg. The compressed
-file is stored in /code{tempdir()} and extracted there using
-/code{untar}.
+\code{acquire_gutenberg_metadata} downloads (using curl as a default)
+the metadata from Project Gutenberg. The compressed file is stored
+in \code{tempdir()} and extracted there using \code{untar}
 }

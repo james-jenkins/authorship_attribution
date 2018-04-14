@@ -2,12 +2,11 @@ metadata_url <- "http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2"
 
 #' Download and extract metadata
 #'
-#' /code{acquire_gutenberg_metadata} downloads (using curl as a default)
-#' to download the metadata from Project Gutenberg. The compressed
-#' file is stored in /code{tempdir()} and extracted there using
-#' /code{untar}.
+#' \code{acquire_gutenberg_metadata} downloads (using curl as a default)
+#' the metadata from Project Gutenberg. The compressed file is stored
+#' in \code{tempdir()} and extracted there using \code{untar}
 #'
-#' @param method method passed to /code{download.file}
+#' @param method method passed to \code{download.file}
 #' @param path location to store downloaded files
 acquire_gutenberg_metadata <- function(method = "curl",
                                        path = getOption("gutenbergr_download_loc")) {
@@ -20,7 +19,7 @@ acquire_gutenberg_metadata <- function(method = "curl",
 
 #' Acquire and cache metadata
 #'
-#' /code{cache_gutenberg_metadata} calls /code{acquire_metadata}
+#' \code{cache_gutenberg_metadata} calls \code{acquire_metadata}
 #' to download and temporarily store the Project Gutenberg
 #' metadata. It then formats and caches the metadata so
 #' that it can be used again. Downloading and extracting
